@@ -1,9 +1,11 @@
-import LoginPage from "./app/login/login";
+import { Toaster } from "./components/ui/sonner";
+import AppRouter from "./layout/routes";
 
 export default function App() {
   return (
     <div>
-      <LoginPage />
+      <Toaster position="top-center" richColors />
+      <AppRouter />
     </div>
   );
 }
