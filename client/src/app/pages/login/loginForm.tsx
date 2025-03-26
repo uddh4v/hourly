@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
-import axios from "axios";
+
 import { useNavigate } from "react-router";
+import { login } from "@/service/login/loginService";
+import axios from "axios";
 
 export function LoginForm({
   className,
@@ -18,20 +20,15 @@ export function LoginForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setError("");
     try {
-      const response = await axios.post("http://localhost:8000/login", {
-        email,
-        password,
-      });
-      localStorage.setItem("token", response.data.token);
-      console.log("token", response.data.token);
-
-      toast.success(response.data.message);
-      setError("");
-      navigate("/dashboard");
+      const response = await login({ email, password });
+      console.log(response && response.status === "success");
+      if (response) {
+        toast.success(response.message);
+        navigate("/dashboard");
+      }
     } catch (error: unknown) {
-      // Type assertion to treat `error` as an AxiosError
       if (axios.isAxiosError(error)) {
         const errorMessage =
           error.response?.data?.detail || "Something went wrong";
@@ -43,6 +40,21 @@ export function LoginForm({
       }
     }
   };
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setError(null); // Clear previous errors
+
+  //   try {
+  //     console.log("uddhav");
+  //     const response = await login({ email, password });
+  //     console.log("Login successful:", response);
+  //     toast.success(response.data.message);
+  //     navigate("/dashboard"); // Redirect to dashboard on success
+  //   } catch (err) {
+  //     setError((err as Error).message || "Login failed");
+  //   }
+  // };
 
   return (
     <form

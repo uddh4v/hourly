@@ -13,8 +13,24 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { getUser } from "@/service/login/loginService";
+import { useEffect } from "react";
 
 export default function DashBoard() {
+  useEffect(() => {
+    const getLoggedInUser = async () => {
+      try {
+        const response = await getUser();
+        if (response) {
+          console.log(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getLoggedInUser();
+  }, []);
+
   return (
     <SidebarProvider>
       <AppSidebar />
