@@ -22,7 +22,7 @@ interface UserResponse {
 export const login = async (credentials: LoginData): Promise<LoginResponse> => {
   try {
     const response = await axiosInstance.post<LoginResponse>(
-      "/login",
+      "api/user/login",
       credentials
     );
 
