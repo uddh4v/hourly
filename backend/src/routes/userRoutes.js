@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs";
 import User from "../model/userModal.js";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
-// import authMiddleware from "../middleware/auth.js"
+import authMiddleware from "../middleware/auth.js";
+
 const router = express.Router();
-const JET_SECRET = process.env.JET_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const validateUser = [
   body("name").notEmpty().withMessage("Name is required"), // Ensure name is not empty
@@ -27,7 +28,7 @@ router.post("/create", validateUser, async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role, department, designation } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -41,6 +42,9 @@ router.post("/create", validateUser, async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role,
+      department,
+      designation,
     });
     console.log(newUser);
 
@@ -75,18 +79,21 @@ router.post("/login", validateLogin, async (req, res) => {
 
     const isMatch = bcrypt.compareSync(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ status: "failed", message: "Invalid email or password" });
     }
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      JET_SECRET,
+      JWT_SECRET,
       { expiresIn: "1h" }
     );
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
       message: `${user.name} LoggedIn Successfully`,
       token,
+      userId: user._id,
     });
   } catch (error) {
     res
@@ -95,19 +102,32 @@ router.post("/login", validateLogin, async (req, res) => {
   }
 });
 
-// router.get("/me", authMiddleware, async (req, res) => {
-//   try {
-//     const user = await User.findById(req.user.userId).select("-password"); // Exclude password
+router.get("/:userId", authMiddleware, async (req, res) => {
+  try {
+    const requestUserId = req.params.userId;
+    const tokenUserId = req.userId; // Now it will be defined
 
-//     if (!user) {
-//       return res.status(404).json({ status: "failed", message: "User not found" });
-//     }
+    if (requestUserId !== tokenUserId) {
+      return res.status(403).json({ status: "failed", message: "Not allowed" });
+    }
 
-//     res.status(200).json({ status: "success", user });
-//   } catch (error) {
-//     res.status(500).json({ status: "failed", message: "Internal server error" });
-//   }
-// });
+    const user = await User.findOne(
+      { _id: requestUserId },
+      { password: false, __v: false }
+    );
 
-
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "failed", message: "User not found" });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "User data fetched successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
 export default router;

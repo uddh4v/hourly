@@ -2,16 +2,21 @@ import jwt from "jsonwebtoken";
 
 const authMiddleware = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1]; // Extract token from "Bearer token"
-    if (!token) {
-      return res.status(401).json({ status: "failed", message: "Access denied. No token provided." });
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res
+        .status(401)
+        .json({ status: "failed", message: "Unauthorized" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Use environment variable for security
-    req.user = decoded; // Attach user info to request
+    const token = authHeader.split(" ")[1]; // Extract token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+
+    req.userId = decoded.userId; // Attach userId to request
     next();
-  } catch (error) {
-    res.status(401).json({ status: "failed", message: "Invalid or expired token" });
+  } catch (err) {
+    return res.status(401).json({ status: "failed", message: "Invalid token" });
   }
 };
 

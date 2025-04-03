@@ -23,11 +23,11 @@ import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
-import { getUser } from "@/service/login/loginService";
-import { useEffect, useState } from "react";
+// import { getUser } from "@/service/login/loginService";
+import { useState } from "react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user, setUser] = useState({
+  const [user] = useState({
     name: "...loading",
     email: "",
     avatar: "",
@@ -157,23 +157,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
   };
 
-  useEffect(() => {
-    const getLoggedInUser = async () => {
-      try {
-        const response = await getUser();
-        if (response) {
-          setUser({
-            name: response.full_name || "Unknown",
-            email: response.email || "",
-            avatar: response.avatar || "",
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getLoggedInUser();
-  }, []);
+  // useEffect(() => {
+  //   const getLoggedInUser = async () => {
+  //     try {
+  //       const response = await getUser();
+  //       if (response) {
+  //         setUser({
+  //           name: response.full_name || "Unknown",
+  //           email: response.email || "",
+  //           avatar: response.avatar || "",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getLoggedInUser();
+  // }, []);
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

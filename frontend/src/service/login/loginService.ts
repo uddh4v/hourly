@@ -10,12 +10,12 @@ interface LoginResponse {
 
   message: string;
   status: string;
+  userId: string;
 }
 
 interface UserResponse {
   email: string;
   avatar: string;
-
   full_name: string;
 }
 
@@ -28,6 +28,7 @@ export const login = async (credentials: LoginData): Promise<LoginResponse> => {
 
     // Save token to localStorage or context for future requests
     localStorage.setItem("token", response.data.token);
+    localStorage.setItem("userId", response.data.userId);
 
     return response.data;
   } catch (error) {
@@ -41,11 +42,18 @@ export const getUser = async (): Promise<UserResponse> => {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No token found");
 
-    const response = await axiosInstance.get<UserResponse>("/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const userId = localStorage.getItem("userId");
+    if (!userId) throw new Error("No userId found");
+    console.log(userId);
+
+    const response = await axiosInstance.get<UserResponse>(
+      `api/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -60,7 +68,7 @@ export const logout = (): void => {
     localStorage.removeItem("token");
 
     // Optionally, clear other user-related data
-    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
 
     // Redirect to login page (optional, depends on routing setup)
     window.location.href = "/login";

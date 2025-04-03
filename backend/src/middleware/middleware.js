@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import express from "express";
 import logger from "./logger.js"; // Import custom logger
-// import authMiddleware from "./auth.js";
+// import errorMiddleware from "./error.js";
 
 const configureMiddleware = (app) => {
   app.use(logger); // Custom logger middleware
@@ -17,12 +17,14 @@ const configureMiddleware = (app) => {
   app.use(morgan("dev"));
   app.use(compression());
   app.use(cookieParser());
-  // app.use(authMiddleware);
+  // app.use(errorMiddleware);
 
   // Rate limiting middleware (prevents abuse)
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 1 * 60 * 1000, // 1 minute
     max: 100,
+    message: "Too many requests, please try again later.",
+    headers: true,
   });
   app.use(limiter);
 };

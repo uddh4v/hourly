@@ -14,15 +14,24 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { getUser } from "@/service/login/loginService";
+import { setUser } from "@/store/reducers/userInfoSlice";
+import { RootState } from "@/store/store";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function DashBoard() {
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  console.log("user", user);
+  const dispatch = useDispatch();
   useEffect(() => {
     const getLoggedInUser = async () => {
       try {
         const response = await getUser();
+        if (user) return;
         if (response) {
           console.log(response);
+          dispatch(setUser(response));
         }
       } catch (error) {
         console.log(error);

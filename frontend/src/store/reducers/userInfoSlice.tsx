@@ -1,32 +1,25 @@
-// src/redux/userSlice.js
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Initial state
-const initialState = {
+interface UserState {
+  user: unknown | null; // Change `any` to a proper type if using TypeScript
+}
+
+const initialState: UserState = {
   user: null,
-  status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: null,
 };
 
-// Create slice
-const userSlice = createSlice({
-  name: "user",
+const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    setUserLoading: (state) => {
-      state.status = "loading";
-    },
-    setUser: (state, action) => {
-      state.status = "succeeded";
+    setUser: (state, action: PayloadAction<unknown>) => {
       state.user = action.payload;
     },
-    setUserError: (state, action) => {
-      state.status = "failed";
-      state.error = action.payload;
+    clearUser: (state) => {
+      state.user = null;
     },
   },
 });
 
-export const { setUserLoading, setUser, setUserError } = userSlice.actions;
-
-export default userSlice.reducer;
+export const { setUser, clearUser } = authSlice.actions;
+export default authSlice.reducer;
