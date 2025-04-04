@@ -23,17 +23,31 @@ import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
-// import { getUser } from "@/service/login/loginService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user] = useState({
+  const userData = useSelector((state: RootState) => state.auth.user);
+  console.log("userdata", userData?.user.email);
+
+  const [user, setUser] = useState({
     name: "...loading",
     email: "",
     avatar: "",
   });
+  useEffect(() => {
+    if (userData) {
+      setUser({
+        name: userData.user.name || "",
+        email: userData.user.email || "",
+        avatar: userData.user.avatar || "",
+      });
+    }
+  }, [userData]);
+
+  console.log("user", user);
   const data = {
-    user,
     teams: [
       {
         name: "Acme Inc",
@@ -157,23 +171,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
   };
 
-  // useEffect(() => {
-  //   const getLoggedInUser = async () => {
-  //     try {
-  //       const response = await getUser();
-  //       if (response) {
-  //         setUser({
-  //           name: response.full_name || "Unknown",
-  //           email: response.email || "",
-  //           avatar: response.avatar || "",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getLoggedInUser();
-  // }, []);
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -184,7 +181,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

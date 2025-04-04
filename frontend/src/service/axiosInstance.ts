@@ -4,9 +4,9 @@ import { API_URL } from "./apiConfig/apiConfig";
 const axiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "multipart/form-data",
+  // },
 });
 
 console.log("Api url :", API_URL);

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { useNavigate } from "react-router";
 import { login } from "@/service/login/loginService";
-import axios from "axios";
+import { AxiosError } from "axios";
 
 export function LoginForm({
   className,
@@ -20,41 +20,22 @@ export function LoginForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError(null);
+
     try {
       const response = await login({ email, password });
-      console.log(response && response.status === "success");
-      if (response) {
-        toast.success(response.message);
-        navigate("/dashboard");
-      }
+      toast.success(response.message);
+      navigate("/dashboard");
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.detail || "Something went wrong";
-        setError(error.response?.data?.detail || "Something went wrong");
-        toast.error(errorMessage);
-      } else {
-        // If it's not an Axios error, show a generic error message
-        toast.error("Something went wrong");
-      }
+      const err = error as AxiosError<{ message: string }>;
+      console.error("Login error:", err);
+      const errmessage =
+        err.response?.data?.message ||
+        "Something went wrong. Please try again later.";
+      toast.error(errmessage);
+      setError(errmessage);
     }
   };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError(null); // Clear previous errors
-
-  //   try {
-  //     console.log("uddhav");
-  //     const response = await login({ email, password });
-  //     console.log("Login successful:", response);
-  //     toast.success(response.data.message);
-  //     navigate("/dashboard"); // Redirect to dashboard on success
-  //   } catch (err) {
-  //     setError((err as Error).message || "Login failed");
-  //   }
-  // };
 
   return (
     <form
