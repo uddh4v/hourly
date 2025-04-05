@@ -11,6 +11,7 @@ const PORT = process.env.PORT;
 // Apply Middleware
 configureMiddleware(app);
 
+// DataBase connection
 connectDB();
 
 // Routes
