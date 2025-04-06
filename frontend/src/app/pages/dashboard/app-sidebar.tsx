@@ -32,14 +32,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   console.log("userdata", userData?.user.email);
 
   const [user, setUser] = useState({
-    name: "...loading",
+    firstName: "...loading",
+    lastName: "",
     email: "",
     avatar: "",
   });
   useEffect(() => {
     if (userData) {
       setUser({
-        name: userData.user.name || "",
+        firstName: userData.user.firstName || "",
+        lastName: userData.user.lastName || "",
         email: userData.user.email || "",
         avatar: userData.user.avatar || "",
       });
@@ -138,7 +140,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "#",
           },
           {
-            title: "Team",
+            title: "Approve Users",
             url: "#",
           },
           {

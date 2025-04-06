@@ -10,7 +10,8 @@ const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const validateUser = [
-  body("name").notEmpty().withMessage("Name is required"), // Ensure name is not empty
+  body("firstName").notEmpty().withMessage("firstName is required"), // Ensure name is not empty
+  body("lastName").notEmpty().withMessage("lastName is required"), // Ensure name is not empty
   body("email").isEmail().withMessage("Please provide a valid email address"), // Ensure email is a valid format
   body("password")
     .isLength({ min: 6 })
@@ -33,7 +34,15 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const { name, email, password, role, department, designation } = req.body;
+      const {
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+        department,
+        designation,
+      } = req.body;
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({
@@ -48,31 +57,37 @@ router.post(
         // Store relative path to the file
         avatar = `/uploads/${req.file.filename}`;
       } else {
-        // Use initials if no image is uploaded
-        const initials = name
-          .split(" ")
-          .slice(0, 2)
-          .map((word) => word[0].toUpperCase())
-          .join("");
-        avatar = initials;
+        const firstNameInitial = firstName.split(" ")[0][0].toUpperCase(); // First letter of first name
+        const lastNameInitial = lastName.split(" ")[0][0].toUpperCase();
+
+        avatar = firstNameInitial + lastNameInitial;
       }
 
       const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = await bcrypt.hashSync(password, salt);
+      const hashedPassword = bcrypt.hashSync(password, salt);
+
+      let isApproved = role === "admin" ? true : false; // Admin gets auto-approved, others need approval
+
       const newUser = await User.create({
-        name,
+        firstName,
+        lastName,
         email,
         avatar,
         password: hashedPassword,
         role,
         department,
         designation,
+        isApproved,
       });
       console.log(newUser);
 
       res.status(201).json({
         status: `success`,
-        message: `Account for ${name} has been created`,
+        message:
+          role === "admin"
+            ? `Account for ${email} has been created successfully`
+            : `Account for ${email} has been created and is pending approval`,
+        userId: newUser._id,
       });
     } catch (error) {
       res.status(500).json({
@@ -102,6 +117,13 @@ router.post("/login", validateLogin, async (req, res) => {
       });
     }
 
+    if (!user.isApproved) {
+      return res.status(403).json({
+        status: "failed",
+        message: "Your account is pending approval",
+      });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
@@ -118,7 +140,7 @@ router.post("/login", validateLogin, async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      message: `${user.name} LoggedIn Successfully`,
+      message: `${user.firstName} ${user.lastName} Logged In Successfully`,
       token,
       userId: user._id,
     });

@@ -1,3 +1,4 @@
+import { DataTableDemo } from "@/app/pages/admin/approveUser/approveUser";
 import DashBoard from "@/app/pages/dashboard/dashboard";
 import NotFoundPage from "@/app/pages/error/notFound";
 import Home from "@/app/pages/home/home";
@@ -12,6 +13,10 @@ function AppRouter() {
 
       <Route path="dashboard" element={<DashBoard />} />
       <Route path="*" element={<NotFoundPage />} />
+
+      {/* admin routes  */}
+
+      <Route path="dashboard/approve-users" element={<DataTableDemo />}></Route>
     </Routes>
   );
 }

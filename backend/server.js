@@ -3,6 +3,7 @@ import configureMiddleware from "./src/middleware/middleware.js";
 import "dotenv/config"; // Loads .env globally
 import connectDB from "./src/config/db.js";
 import userRoutes from "./src/routes/userRoutes.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
 
 const app = express();
 
@@ -16,6 +17,8 @@ connectDB();
 
 // Routes
 app.use("/api/user", userRoutes);
+
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello Express" });
