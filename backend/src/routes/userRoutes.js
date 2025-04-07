@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
 import authMiddleware from "../middleware/auth.js";
 import upload from "../middleware/fileUpload.js";
+import { nanoid } from "nanoid";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -42,6 +43,9 @@ router.post(
         role,
         department,
         designation,
+        location,
+        isRemote,
+        projects,
       } = req.body;
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -67,8 +71,10 @@ router.post(
       const hashedPassword = bcrypt.hashSync(password, salt);
 
       let isApproved = role === "admin" ? true : false; // Admin gets auto-approved, others need approval
+      const empId = `${nanoid(5)}`;
 
       const newUser = await User.create({
+        empId,
         firstName,
         lastName,
         email,
@@ -77,6 +83,9 @@ router.post(
         role,
         department,
         designation,
+        location,
+        isRemote: isRemote === "true", // Make sure this is boolean
+        projects,
         isApproved,
       });
       console.log(newUser);
@@ -156,8 +165,8 @@ router.post("/login", validateLogin, async (req, res) => {
 router.get("/:userId", authMiddleware, async (req, res) => {
   try {
     const requestUserId = req.params.userId;
-    const tokenUserId = req.userId; // Now it will be defined
-
+    const tokenUserId = req.user._id.toString();
+    console.log(req.user._id.toString());
     if (requestUserId !== tokenUserId) {
       return res.status(403).json({ status: "failed", message: "Not allowed" });
     }
@@ -178,6 +187,22 @@ router.get("/:userId", authMiddleware, async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
+  }
+});
+// get all users
+router.get("/allUsers", async (req, res) => {
+  try {
+    const users = await User.find(); // You can also add filters, sorting, or pagination here
+    res.status(200).json({
+      status: "success",
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "failed",
+      message: "Server error",
+      error: error.message,
+    });
   }
 });
 export default router;

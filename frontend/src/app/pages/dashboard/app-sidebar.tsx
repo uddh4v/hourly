@@ -140,8 +140,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "#",
           },
           {
-            title: "Approve Users",
-            url: "#",
+            title: "Users",
+            url: "dashboard/settings/user-management",
           },
           {
             title: "Billing",
