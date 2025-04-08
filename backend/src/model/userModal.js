@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true },
     avatar: { type: String, default: "", required: false },
     password: { type: String, required: true },
-    role: { type: String, required: true },
+    role: { type: String, enum: ["user", "admin", "manager"], default: "user" },
     department: { type: String, required: false },
     designation: { type: String, required: false },
     isApproved: { type: Boolean, default: false }, // Field to track approval status

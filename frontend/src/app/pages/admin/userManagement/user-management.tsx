@@ -35,56 +35,67 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getAllUser } from "@/service/login/loginService";
+import { useState } from "react";
+import { IUser } from "@/interfaces/user/IUser";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-];
+// const data: UserData[] = [
+//   {
+//     id: "m5gr84i9",
+//     name: "Uddhav Powar",
+//     role: "Employee",
+//     status: "success",
+//     email: "ken99@example.com",
+//   },
+//   {
+//     id: "3u1reuv4",
+//     name: "Uddhav Powar",
+//     role: "Employee",
+//     status: "success",
+//     email: "Abe45@example.com",
+//   },
+//   {
+//     id: "derv1ws0",
+//     name: "Uddhav Powar",
+//     role: "Employee",
+//     status: "processing",
+//     email: "Monserrat44@example.com",
+//   },
+//   {
+//     id: "5kma53ae",
+//     name: "Uddhav Powar",
+//     role: "Employee",
+//     status: "success",
+//     email: "Silas22@example.com",
+//   },
+//   {
+//     id: "bhqecj4p",
+//     name: "Uddhav Powar",
+//     role: "Employee",
+//     status: "failed",
+//     email: "carmella@example.com",
+//   },
+// ];
 
-export type Payment = {
+type UserData = {
   id: string;
-  amount: number;
+  name: string;
   status: "pending" | "processing" | "success" | "failed";
   email: string;
+  role: string;
 };
-
 // eslint-disable-next-line react-refresh/only-export-components
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<UserData>[] = [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -101,11 +112,9 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "email",
@@ -123,22 +132,20 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("status")}</div>
+    ),
+  },
+  {
+    accessorKey: "role",
+    header: "Role",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("role")}</div>,
   },
   {
     id: "actions",
+    header: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
@@ -173,9 +180,37 @@ export function DataTableDemo() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [data, setData] = useState<UserData[]>([]);
+  // const [setLoading] = React.useState(true);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAllUser(); // Replace with your actual endpoint
+        console.log([response]);
+        const users = response;
+        const formattedUsers: UserData[] = users.map((user: IUser) => ({
+          id: user._id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role,
+          status: user.isApproved ? "success" : "pending",
+        }));
+
+        setData(formattedUsers);
+        console.log("formattedUsers", formattedUsers);
+      } catch (error) {
+        console.error("Failed to fetch users", error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const table = useReactTable({
     data,

@@ -1,4 +1,3 @@
-import { AppSidebar } from "@/app/pages/dashboard/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +18,8 @@ import { AppDispatch, RootState } from "@/store/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router";
+import { AppSidebar } from "./app-sidebar";
+import { ModeToggle } from "@/components/mode.toggle";
 
 export default function DashBoard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,8 +45,8 @@ export default function DashBoard() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
@@ -62,15 +63,15 @@ export default function DashBoard() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
+
+          {/* 👇 Push ModeToggle to the right */}
+          <div className="ml-auto">
+            <ModeToggle />
+          </div>
         </header>
+
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <Outlet />
-          {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-          </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" /> */}
         </div>
       </SidebarInset>
     </SidebarProvider>

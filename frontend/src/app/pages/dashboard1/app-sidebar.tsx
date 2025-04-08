@@ -1,12 +1,9 @@
 import * as React from "react";
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
   Command,
   Frame,
   GalleryVerticalEnd,
-  Map,
   PieChart,
   Settings2,
   SquareTerminal,
@@ -69,67 +66,67 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     navMain: [
       {
-        title: "Playground",
+        title: "Dashboard",
         url: "#",
         icon: SquareTerminal,
         isActive: true,
         items: [
           {
-            title: "History",
+            title: "Timesheet",
             url: "#",
           },
           {
-            title: "Starred",
+            title: "Logs",
             url: "#",
           },
-          {
-            title: "Settings",
-            url: "#",
-          },
+          // {
+          //   title: "Settings",
+          //   url: "#",
+          // },
         ],
       },
-      {
-        title: "Models",
-        url: "#",
-        icon: Bot,
-        items: [
-          {
-            title: "Genesis",
-            url: "#",
-          },
-          {
-            title: "Explorer",
-            url: "#",
-          },
-          {
-            title: "Quantum",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Documentation",
-        url: "#",
-        icon: BookOpen,
-        items: [
-          {
-            title: "Introduction",
-            url: "#",
-          },
-          {
-            title: "Get Started",
-            url: "#",
-          },
-          {
-            title: "Tutorials",
-            url: "#",
-          },
-          {
-            title: "Changelog",
-            url: "#",
-          },
-        ],
-      },
+      // {
+      //   title: "Models",
+      //   url: "#",
+      //   icon: Bot,
+      //   items: [
+      //     {
+      //       title: "Genesis",
+      //       url: "#",
+      //     },
+      //     {
+      //       title: "Explorer",
+      //       url: "#",
+      //     },
+      //     {
+      //       title: "Quantum",
+      //       url: "#",
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Documentation",
+      //   url: "#",
+      //   icon: BookOpen,
+      //   items: [
+      //     {
+      //       title: "Introduction",
+      //       url: "#",
+      //     },
+      //     {
+      //       title: "Get Started",
+      //       url: "#",
+      //     },
+      //     {
+      //       title: "Tutorials",
+      //       url: "#",
+      //     },
+      //     {
+      //       title: "Changelog",
+      //       url: "#",
+      //     },
+      //   ],
+      // },
       {
         title: "Settings",
         url: "#",
@@ -137,19 +134,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
           {
             title: "General",
-            url: "#",
+            url: "dashboard1",
           },
           {
             title: "Users",
             url: "dashboard/settings/user-management",
-          },
-          {
-            title: "Billing",
-            url: "#",
-          },
-          {
-            title: "Limits",
-            url: "#",
           },
         ],
       },
@@ -165,11 +154,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "#",
         icon: PieChart,
       },
-      {
-        name: "Travel",
-        url: "#",
-        icon: Map,
-      },
+      // {
+      //   name: "Travel",
+      //   url: "#",
+      //   icon: Map,
+      // },
     ],
   };
 

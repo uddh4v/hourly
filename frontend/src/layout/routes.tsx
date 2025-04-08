@@ -1,8 +1,6 @@
-// import { DataTableDemo } from "@/app/pages/admin/approveUser/approveUser";
-
 import { DataTableDemo } from "@/app/pages/admin/userManagement/user-management";
-
-import DashBoard from "@/app/pages/dashboard/dashboard";
+import DashboardPage from "@/app/pages/dashboard/page";
+import DashBoard from "@/app/pages/dashboard1/dashboard";
 import NotFoundPage from "@/app/pages/error/notFound";
 import Home from "@/app/pages/home/home";
 import LoginPage from "@/app/pages/login/login";
@@ -15,8 +13,8 @@ function AppRouter() {
       <Route path="login" element={<LoginPage />} />
 
       <Route path="dashboard" element={<DashBoard />}>
-        {/* This will render inside the <Outlet /> of DashBoard */}
         <Route path="settings/user-management" element={<DataTableDemo />} />
+        <Route path="settings/dashboard1" element={<DashboardPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
 

@@ -14,7 +14,8 @@
     "noEmit": true,
 
     /* Linting */
-    "strict": true,
+    // "strict": true,          // Optional, if you want most strict checks
+    "noImplicitAny": false ,  // ✅ This allows the use of `any`
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,

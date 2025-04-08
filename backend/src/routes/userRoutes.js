@@ -6,6 +6,7 @@ import { body, validationResult } from "express-validator";
 import authMiddleware from "../middleware/auth.js";
 import upload from "../middleware/fileUpload.js";
 import { nanoid } from "nanoid";
+import { requireRole } from "../middleware/requiredRole.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -24,6 +25,21 @@ const validateLogin = [
   body("email").isEmail().withMessage("Please provide a valid email address"),
   body("password").notEmpty().withMessage("Password is required"),
 ];
+
+router.get(
+  "/alluser",
+  authMiddleware,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (err) {
+      res.status(500).json({ status: "failed", message: err.message });
+    }
+  }
+);
+
 //create user
 router.post(
   "/create",
@@ -144,7 +160,7 @@ router.post("/login", validateLogin, async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
     res.status(200).json({
@@ -189,20 +205,5 @@ router.get("/:userId", authMiddleware, async (req, res) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 });
-// get all users
-router.get("/allUsers", async (req, res) => {
-  try {
-    const users = await User.find(); // You can also add filters, sorting, or pagination here
-    res.status(200).json({
-      status: "success",
-      users,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "failed",
-      message: "Server error",
-      error: error.message,
-    });
-  }
-});
+
 export default router;

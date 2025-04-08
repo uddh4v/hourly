@@ -15,6 +15,7 @@ interface LoginResponse {
 }
 
 interface UserResponse {
+  // json(): unknown;
   user: IUser;
 }
 
@@ -42,6 +43,18 @@ export const getUser = async (): Promise<UserResponse> => {
     },
   });
 
+  return response.data;
+};
+
+export const getAllUser = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+
+  const response = await axiosInstance.get<IUser[]>(`api/user/alluser`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
