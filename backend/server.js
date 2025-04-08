@@ -22,7 +22,7 @@ app.use("/api/user", userRoutes);
 
 app.use("/api/admin", adminRoutes);
 
-api.use("/api/timesheet");
+// api.use("/api/timesheet");
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
