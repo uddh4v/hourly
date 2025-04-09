@@ -8,6 +8,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "strict": true,  // this includes `noImplicitAny` as part of strict mode
+    "noImplicitAny": true
   }
 }

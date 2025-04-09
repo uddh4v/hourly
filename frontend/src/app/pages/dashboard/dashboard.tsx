@@ -12,14 +12,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import data from "./data.json";
+// import data from "./data.json";
 
 // import DashboardPointer from "@/components/pointer/pointer-dashboard";
 import { ModeToggle } from "@/theme/darkmode/mode-toggle";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
-import { DataTable } from "@/components/dashboard/data-table";
+// import { DataTable } from "@/components/dashboard/data-table";
 import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
 import { SectionCards } from "@/components/dashboard/section-cards";
+import { DataTableDemo } from "../table/data-table";
 export default function DashboardPage() {
   return (
     <SidebarProvider>
@@ -58,7 +59,8 @@ export default function DashboardPage() {
                 <div className="px-4 lg:px-6">
                   <ChartAreaInteractive />
                 </div>
-                <DataTable data={data} />
+                <DataTableDemo/>
+                {/* <DataTable data={data} /> */}
               </div>
             </div>
           </div>
