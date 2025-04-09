@@ -6,6 +6,8 @@ import userRoutes from "./src/routes/userRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 // import swaggerSpec from "./src/swagger/swaggerConfig.js";
 // import swaggerUi from "swagger-ui-express";
+import projectRoutes from "./src/routes/projectRoutes.js";
+import timesheetRoutes from "./src/routes/timesheetRoutes.js";
 
 const app = express();
 
@@ -21,6 +23,10 @@ connectDB();
 app.use("/api/user", userRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/project", projectRoutes);
+
+app.use("/api/timesheet", timesheetRoutes);
 
 // api.use("/api/timesheet");
 

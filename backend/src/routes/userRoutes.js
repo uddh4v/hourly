@@ -7,6 +7,8 @@ import authMiddleware from "../middleware/auth.js";
 import upload from "../middleware/fileUpload.js";
 import { nanoid } from "nanoid";
 import { requireRole } from "../middleware/requiredRole.js";
+import Project from "../model/projectModel.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -61,8 +63,40 @@ router.post(
         designation,
         location,
         isRemote,
-        projects,
+        projects = [],
       } = req.body;
+
+      // Normalize and sanitize projects
+      let projectIds = [];
+
+      if (typeof projects === "string") {
+        projectIds = [projects];
+      } else if (Array.isArray(projects)) {
+        projectIds = projects;
+      }
+
+      // Filter out invalid IDs (must be valid 24-character hex strings)
+      const validObjectIds = projectIds.filter(
+        (id) => typeof id === "string" && /^[a-f\d]{24}$/i.test(id)
+      );
+
+      // Validate against DB if any projects are provided
+      let validProjects = [];
+      if (validObjectIds.length > 0) {
+        validProjects = await Project.find({
+          _id: {
+            $in: validObjectIds.map((id) => new mongoose.Types.ObjectId(id)),
+          },
+        });
+
+        if (validProjects.length !== validObjectIds.length) {
+          return res.status(400).json({
+            status: "failed",
+            message: "One or more project IDs are invalid.",
+          });
+        }
+      }
+
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({
@@ -101,7 +135,7 @@ router.post(
         designation,
         location,
         isRemote: isRemote === "true", // Make sure this is boolean
-        projects,
+        projects: validProjects.map((proj) => proj._id),
         isApproved,
       });
       console.log(newUser);
