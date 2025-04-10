@@ -7,9 +7,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@components/*": ["src/components/*"],
+      "@theme/*": ["src/theme/*"],
+      "@store/*": ["src/store/*"],
+      "@assets/*": ["src/assets/*"]
     },
-    "strict": true,  // this includes `noImplicitAny` as part of strict mode
+    "strict": true, // this includes `noImplicitAny` as part of strict mode
     "noImplicitAny": true
   }
 }

@@ -13,6 +13,12 @@ export interface LoginResponse {
   message: string;
   userId: string;
 }
+
+export interface UserResponse {
+  status: "success" | "failed";
+  message: string;
+  user: User;
+}
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const response = await axiosInstance.post<LoginResponse>(
     `${API_URL}/api/user/login`,
@@ -23,9 +29,17 @@ export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getUserById = async (userId: any): Promise<User> => {
-  const response = await axiosInstance.get<User>(`/api/user/${userId}`, {
-    withCredentials: true,
-  });
+export const getUserById = async (userId: any): Promise<UserResponse> => {
+  const response = await axiosInstance.get<UserResponse>(
+    `/api/user/${userId}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
+export const LogoutUser = async () => {
+  const response = await axiosInstance.post(`/api/user/logout`);
   return response.data;
 };

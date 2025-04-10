@@ -1,5 +1,5 @@
 import { CalendarDays } from "lucide-react";
-import { LoginForm } from "./login-form";
+import { LoginForm } from "@/app/pages/authentication/login-form";
 import img1 from "@/assets/loginImg1.jpg";
 // import img2 from "@/assets/loginImg2.jpg";
 

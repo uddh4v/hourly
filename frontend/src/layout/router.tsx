@@ -1,14 +1,20 @@
 import LoginPage from "@/app/pages/authentication/page";
 import DashboardPage from "@/app/pages/dashboard/dashboard";
-import Hero from "@/app/pages/hero";
+import NotFound from "@/app/pages/error/error";
+import HeroSection from "@/app/pages/hero";
+
 import { Route, Routes } from "react-router";
+import ProtectedRoutes from "./protected-route";
 
 const AppRouter = () => {
   return (
     <Routes>
-      <Route index element={<Hero />} />
+      <Route index element={<HeroSection />} />
       <Route path="login" element={<LoginPage />} />
-      <Route path="dashboard" element={<DashboardPage />} />
+      <Route element={<ProtectedRoutes />}>
+        <Route path="dashboard" element={<DashboardPage />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
