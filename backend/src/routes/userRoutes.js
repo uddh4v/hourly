@@ -197,10 +197,17 @@ router.post("/login", validateLogin, async (req, res) => {
       { expiresIn: "7d" }
     );
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None", // or "Lax" depending on your frontend/backend setup
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     res.status(200).json({
       status: "success",
       message: `${user.firstName} ${user.lastName} Logged In Successfully`,
-      token,
+      // token,
       userId: user._id,
     });
   } catch (error) {
@@ -215,8 +222,8 @@ router.post("/login", validateLogin, async (req, res) => {
 router.get("/:userId", authMiddleware, async (req, res) => {
   try {
     const requestUserId = req.params.userId;
-    const tokenUserId = req.user._id.toString();
-    console.log(req.user._id.toString());
+    const tokenUserId = req.user.userId;
+
     if (requestUserId !== tokenUserId) {
       return res.status(403).json({ status: "failed", message: "Not allowed" });
     }
@@ -238,6 +245,19 @@ router.get("/:userId", authMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
 });
 
 export default router;

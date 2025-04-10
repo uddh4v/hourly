@@ -13,7 +13,12 @@ import dotenv from "dotenv";
 const configureMiddleware = (app) => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  app.use(cors());
+  app.use(
+    cors({
+      origin: "http://localhost:5173", // React frontend
+      credentials: true,
+    })
+  );
   dotenv.config();
   app.use(logger); // Custom logger middleware
   app.use(express.json());

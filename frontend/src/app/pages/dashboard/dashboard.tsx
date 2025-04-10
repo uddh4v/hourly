@@ -15,13 +15,26 @@ import {
 // import data from "./data.json";
 
 // import DashboardPointer from "@/components/pointer/pointer-dashboard";
-import { ModeToggle } from "@/theme/darkmode/mode-toggle";
+
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 // import { DataTable } from "@/components/dashboard/data-table";
 import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
 import { SectionCards } from "@/components/dashboard/section-cards";
 import { DataTableDemo } from "../table/data-table";
+import { getUserById } from "@/service/auth/login";
+import { useEffect } from "react";
 export default function DashboardPage() {
+  useEffect(() => {
+    const getUserDetails = async () => {
+      const userId = localStorage.getItem("userId") || "";
+      console.log(userId);
+      const response = await getUserById(userId);
+      console.log(response);
+    };
+
+    getUserDetails();
+  }, []);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -47,9 +60,6 @@ export default function DashboardPage() {
           </div>
 
           {/* Right side: mode toggle */}
-          <div>
-            <ModeToggle />
-          </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="flex flex-1 flex-col">
@@ -59,7 +69,7 @@ export default function DashboardPage() {
                 <div className="px-4 lg:px-6">
                   <ChartAreaInteractive />
                 </div>
-                <DataTableDemo/>
+                <DataTableDemo />
                 {/* <DataTable data={data} /> */}
               </div>
             </div>
