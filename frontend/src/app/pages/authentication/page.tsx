@@ -1,9 +1,12 @@
 import { CalendarDays } from "lucide-react";
 import { LoginForm } from "@/app/pages/authentication/login-form";
 import img1 from "@/assets/loginImg1.jpg";
+import { SignupForm } from "./signup-form";
+import { useState } from "react";
 // import img2 from "@/assets/loginImg2.jpg";
 
 export default function LoginPage() {
+  const [isLogin, setIsLogin] = useState(false);
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -17,7 +20,11 @@ export default function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm />
+            {isLogin ? (
+              <LoginForm onSwitchToSignup={() => setIsLogin(false)} />
+            ) : (
+              <SignupForm onSwitchToLogin={() => setIsLogin(true)} />
+            )}
           </div>
         </div>
       </div>
