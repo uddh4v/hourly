@@ -21,7 +21,7 @@ export interface UserResponse {
 }
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const response = await axiosInstance.post<LoginResponse>(
-    `${API_URL}/api/user/login`,
+    `${API_URL}/api/auth/login`,
     data,
     { withCredentials: true }
   );
@@ -40,6 +40,6 @@ export const getUserById = async (userId: any): Promise<UserResponse> => {
 };
 
 export const LogoutUser = async () => {
-  const response = await axiosInstance.post(`/api/user/logout`);
+  const response = await axiosInstance.post(`/api/auth/logout`);
   return response.data;
 };

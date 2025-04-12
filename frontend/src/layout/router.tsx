@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import ProtectedRoutes from "./protected-route";
 
@@ -11,11 +11,26 @@ const NotFound = lazy(() => import("@/app/pages/error/error"));
 const HeroSection = lazy(() => import("@/app/pages/hero"));
 
 const AppRouter = () => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress < 90) {
+          return prevProgress + 5; // Increment the progress by 5
+        }
+        clearInterval(interval); // Stop the interval once it reaches 100
+        return 90;
+      });
+    }, 100);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
   return (
     <Suspense
       fallback={
         <div className="flex items-center justify-center h-screen flex-col gap-4">
-          <Progress value={33} className="w-1/4" />
+          <Progress value={progress} className="w-1/4" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       }

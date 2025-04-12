@@ -1,7 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import User from "../model/userModal.js";
-import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
 import authMiddleware from "../middleware/auth.js";
 import upload from "../middleware/fileUpload.js";
@@ -22,11 +21,7 @@ const validateUser = [
     .withMessage("Password must be at least 6 characters long"), // Ensure password length is at least 6 characters
 ];
 
-//login validation
-const validateLogin = [
-  body("email").isEmail().withMessage("Please provide a valid email address"),
-  body("password").notEmpty().withMessage("Password is required"),
-];
+
 
 router.get(
   "/alluser",
@@ -158,67 +153,7 @@ router.post(
   }
 );
 
-router.post("/login", validateLogin, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({
-        status: "failed",
-        message: "Invalid email or password",
-      });
-    }
-
-    if (!user.isApproved) {
-      return res.status(403).json({
-        status: "failed",
-        message: "Your account is pending approval",
-      });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({
-        status: "failed",
-        message: "Invalid email or password",
-      });
-    }
-
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None", // or "Lax" depending on your frontend/backend setup
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    res.status(200).json({
-      status: "success",
-      message: `${user.firstName} ${user.lastName} Logged In Successfully`,
-      // token,
-      userId: user._id,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      status: "failed",
-      message: "Internal server error",
-    });
-  }
-});
-
+//get user by id
 router.get("/:userId", authMiddleware, async (req, res) => {
   try {
     const requestUserId = req.params.userId;
@@ -245,19 +180,6 @@ router.get("/:userId", authMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
-});
-
-router.post("/logout", (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "None",
-  });
-
-  res.status(200).json({
-    status: "success",
-    message: "Logged out successfully",
-  });
 });
 
 export default router;

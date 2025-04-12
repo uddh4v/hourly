@@ -1,13 +1,13 @@
 import express from "express";
 import configureMiddleware from "./src/middleware/middleware.js";
-import "dotenv/config"; // Loads .env globally
+import "dotenv/config";
 import connectDB from "./src/config/db.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
-// import swaggerSpec from "./src/swagger/swaggerConfig.js";
-// import swaggerUi from "swagger-ui-express";
 import projectRoutes from "./src/routes/projectRoutes.js";
 import timesheetRoutes from "./src/routes/timesheetRoutes.js";
+
+import authRoutes from "./src/routes/authRoutes.js";
 
 const app = express();
 
@@ -27,6 +27,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/project", projectRoutes);
 
 app.use("/api/timesheet", timesheetRoutes);
+
+app.use("/api/auth", authRoutes);
 
 // api.use("/api/timesheet");
 

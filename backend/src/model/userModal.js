@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    empId: { type: String, required: true },
+    empId: { type: String, required: false },
     firstName: { type: String, required: true },
     lastName: { type: String, required: false },
     email: { type: String, required: true, unique: true, lowercase: true },
@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
     location: { type: String, required: false },
     isRemote: { type: Boolean, default: false },
     projects: [{ type: String }], // Or use ObjectId if referencing another collection
+    
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
+
   },
   { timestamps: true }
 );

@@ -22,6 +22,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 // import { getUserById } from "@/service/auth/login";
 // import { useEffect } from "react";
+// import data from "./data.json";
 export default function DashboardPage() {
   const user = useSelector((state: RootState) => state.user.user);
   console.log("dashboard user redux", user);

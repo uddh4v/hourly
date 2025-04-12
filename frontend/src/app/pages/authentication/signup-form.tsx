@@ -51,7 +51,7 @@ export function SignupForm({
       //   onSubmit={handleLogin}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Craete a Account</h1>
+        <h1 className="text-2xl font-bold">Create a Account</h1>
         <p className="text-muted-foreground text-sm whitespace-nowrap">
           Let's get started. Fill in the details below to create your account.
         </p>
