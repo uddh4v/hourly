@@ -30,12 +30,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { columns, Payment } from "./columns";
+import { columns, Timesheet } from "./columns";
 import { nanoid } from "nanoid"; // for unique ID generation
 import confetti from "canvas-confetti";
 
 export function DataTableDemo() {
-  const [data, setData] = React.useState<Payment[]>([
+  const [data, setData] = React.useState<Timesheet[]>([
     {
       id: "m5gr84i9",
       amount: 316,
@@ -73,7 +73,7 @@ export function DataTableDemo() {
 
   // ➕ Handler to add a new row
   const handleAddRow = () => {
-    const newRow: Payment = {
+    const newRow: Timesheet = {
       id: nanoid(),
       amount: 0,
       status: "pending",
@@ -82,7 +82,6 @@ export function DataTableDemo() {
     setData((prev) => [newRow, ...prev]);
   };
 
- 
   const SideCannonConfetti = () => {
     const end = Date.now() + 3 * 1000; // 3 seconds
     const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
@@ -113,13 +112,11 @@ export function DataTableDemo() {
     frame();
   };
 
-  
   // const callRandomConfetti = () => {
   //   const functions = [
-   
+
   //     SideCannonConfetti,
 
-     
   //   ];
   //   const randomIndex = Math.floor(Math.random() * functions.length);
   //   functions[randomIndex](); // call it!
