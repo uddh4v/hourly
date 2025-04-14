@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema(
   {
-    name: {
+    projectName: {
       type: String,
       required: true,
       unique: true,
@@ -11,7 +11,10 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: String,
+    description: {
+      type: String,
+      required: false,
+    },
     status: {
       type: String,
       enum: ["active", "completed", "on hold"],

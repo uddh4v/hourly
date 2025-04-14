@@ -3,17 +3,17 @@ import Project from "../model/projectModel.js";
 
 const router = express.Router();
 
-router.post("/create", async (req, res) => {
+router.post("/createProject", async (req, res) => {
   try {
-    const { name, clientName, description, status } = req.body;
-    const existingProject = await Project.findOne({ name });
+    const { projectName, clientName, description, status } = req.body;
+    const existingProject = await Project.findOne({ projectName });
     if (existingProject) {
       return res
         .status(400)
-        .json({ status: "failed", message: `${name} project already exists` });
+        .json({ status: "failed", message: `${projectName} project already exists` });
     }
     const newProject = await Project.create({
-      name,
+      projectName,
       clientName,
       description,
       status,
@@ -24,7 +24,7 @@ router.post("/create", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: "failed", message: "Server error", error: err.message });
+      .json({ status: "failed", message: "Server error", error: error.message });
   }
 });
 export default router;

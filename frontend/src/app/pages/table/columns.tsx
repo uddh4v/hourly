@@ -23,8 +23,9 @@ import {
 } from "@tabler/icons-react";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { Trash2 } from "lucide-react";
 
-export type Payment = {
+export type Timesheet = {
   id: string;
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
@@ -33,7 +34,9 @@ export type Payment = {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const columns: ColumnDef<Payment>[] = [
+export const columns = (
+  setData: React.Dispatch<React.SetStateAction<Timesheet[]>>
+): ColumnDef<Timesheet>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -190,15 +193,15 @@ export const columns: ColumnDef<Payment>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const handleSend = () => {
-        const rowData = row.original;
-        // Add your send logic here
-        console.log("Sending:", rowData);
-      };
+      const handleDelete = () => {
+        const idToDelete = row.original.id;
 
+        // ✅ Use setData to remove the row by ID
+        setData((prev) => prev.filter((item) => item.id !== idToDelete));
+      };
       return (
-        <Button variant="destructive" onClick={handleSend}>
-          Delete
+        <Button variant="destructive" onClick={handleDelete}>
+          <Trash2 />
         </Button>
       );
     },

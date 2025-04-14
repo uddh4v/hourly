@@ -54,7 +54,7 @@ export function DataTableDemo() {
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(setData), // pass setData into the columns
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -79,40 +79,10 @@ export function DataTableDemo() {
       status: "pending",
       email: "",
     };
-    setData((prev) => [...prev, newRow]);
+    setData((prev) => [newRow, ...prev]);
   };
 
-  const StarConfetti = () => {
-    const defaults = {
-      spread: 360,
-      ticks: 50,
-      gravity: 0,
-      decay: 0.94,
-      startVelocity: 30,
-      colors: ["#FFE400", "#FFBD00", "#E89400", "#FFCA6C", "#FDFFB8"],
-    };
-
-    const shoot = () => {
-      confetti({
-        ...defaults,
-        particleCount: 40,
-        scalar: 1.2,
-        shapes: ["star"],
-      });
-
-      confetti({
-        ...defaults,
-        particleCount: 10,
-        scalar: 0.75,
-        shapes: ["circle"],
-      });
-    };
-
-    setTimeout(shoot, 0);
-    setTimeout(shoot, 100);
-    setTimeout(shoot, 200);
-  };
-
+ 
   const SideCannonConfetti = () => {
     const end = Date.now() + 3 * 1000; // 3 seconds
     const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
@@ -143,94 +113,17 @@ export function DataTableDemo() {
     frame();
   };
 
-  const FireworksConfetti = () => {
-    const duration = 5 * 1000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+  
+  // const callRandomConfetti = () => {
+  //   const functions = [
+   
+  //     SideCannonConfetti,
 
-    const randomInRange = (min: number, max: number) =>
-      Math.random() * (max - min) + min;
-
-    const interval = window.setInterval(() => {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
-
-      const particleCount = 50 * (timeLeft / duration);
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-      });
-    }, 250);
-  };
-
-  const CustomConfetti = () => {
-    const scalar = 2;
-    const triangle = confetti.shapeFromPath({
-      path: "M0 10 L5 0 L10 10z",
-    });
-    const square = confetti.shapeFromPath({
-      path: "M0 0 L10 0 L10 10 L0 10 Z",
-    });
-    const coin = confetti.shapeFromPath({
-      path: "M5 0 A5 5 0 1 0 5 10 A5 5 0 1 0 5 0 Z",
-    });
-    const tree = confetti.shapeFromPath({
-      path: "M5 0 L10 10 L0 10 Z",
-    });
-
-    const defaults = {
-      spread: 360,
-      ticks: 60,
-      gravity: 0,
-      decay: 0.96,
-      startVelocity: 20,
-      shapes: [triangle, square, coin, tree],
-      scalar,
-    };
-
-    const shoot = () => {
-      confetti({
-        ...defaults,
-        particleCount: 30,
-      });
-
-      confetti({
-        ...defaults,
-        particleCount: 5,
-      });
-
-      confetti({
-        ...defaults,
-        particleCount: 15,
-        scalar: scalar / 2,
-        shapes: ["circle"],
-      });
-    };
-
-    setTimeout(shoot, 0);
-    setTimeout(shoot, 100);
-    setTimeout(shoot, 200);
-  };
-
-  const callRandomConfetti = () => {
-    const functions = [
-      StarConfetti,
-      SideCannonConfetti,
-      FireworksConfetti,
-      CustomConfetti,
-    ];
-    const randomIndex = Math.floor(Math.random() * functions.length);
-    functions[randomIndex](); // call it!
-  };
+     
+  //   ];
+  //   const randomIndex = Math.floor(Math.random() * functions.length);
+  //   functions[randomIndex](); // call it!
+  // };
 
   return (
     <div className="w-full">
@@ -340,7 +233,7 @@ export function DataTableDemo() {
           <Button
             size="sm"
             className="bg-green-400 dark:text-white"
-            onClick={callRandomConfetti}
+            onClick={SideCannonConfetti}
             // disabled={!table.getCanNextPage()}
           >
             Submit

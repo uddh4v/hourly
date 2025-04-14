@@ -12,7 +12,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 // import { DataTable } from "@/components/dashboard/data-table";
 import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
@@ -20,9 +19,6 @@ import { SectionCards } from "@/components/dashboard/section-cards";
 import { DataTableDemo } from "../table/data-table";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-// import { getUserById } from "@/service/auth/login";
-// import { useEffect } from "react";
-// import data from "./data.json";
 export default function DashboardPage() {
   const user = useSelector((state: RootState) => state.user.user);
   console.log("dashboard user redux", user);
