@@ -1,70 +1,28 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/dashboard/app-sidebar";
-// import { DataTable } from "@/components/dashboard/data-table";
 import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
 import { SectionCards } from "@/components/dashboard/section-cards";
-import { DataTableDemo } from "../table/data-table";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-export default function DashboardPage() {
-  const user = useSelector((state: RootState) => state.user.user);
-  console.log("dashboard user redux", user);
+import { PieChartPage } from "./charts/PieChart";
+import { BarChartPage } from "./charts/BarChart";
+import { BarChartHorizontal } from "./charts/BarChartHorizontal";
 
+export default function Dashboard() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center justify-between px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          {/* Left side: sidebar trigger + breadcrumb */}
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+    <div>
+      <SectionCards />
+      <div className="px-4 lg:px-6 pt-10">
+        <ChartAreaInteractive />
+        <div className="flex flex-col lg:flex-row justify-between space-x-4 mt-8">
+          {/* Mobile: 1 chart per row, Tablet/Laptop: 2 charts per row, Desktop: 3 charts per row */}
+          <div className="w-full lg:w-1/3 mb-4 lg:mb-0">
+            <PieChartPage />
           </div>
-
-          {/* Right side: mode toggle */}
-        </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="flex flex-1 flex-col">
-            <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                <SectionCards />
-                <div className="px-4 lg:px-6">
-                  <ChartAreaInteractive />
-                </div>
-                <DataTableDemo />
-                {/* <DataTable data={data} /> */}
-              </div>
-            </div>
+          <div className="w-full lg:w-1/3 mb-4 lg:mb-0">
+            <BarChartPage />
           </div>
-          {/* <DashboardPointer /> */}
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+          <div className="w-full lg:w-1/3">
+            <BarChartHorizontal />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

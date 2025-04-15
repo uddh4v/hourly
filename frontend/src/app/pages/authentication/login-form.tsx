@@ -7,6 +7,7 @@ import { loginUser } from "@/service/auth/login";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 type LoginFormProps = React.ComponentProps<"form"> & {
   onSwitchToSignup: () => void;
@@ -32,7 +33,7 @@ export function LoginForm({
       console.log(response);
       if (response) {
         localStorage.setItem("userId", response.userId);
-        navigate("/dashboard");
+        navigate("/main");
 
         toast.success(response.status, {
           description: response.message,
@@ -94,7 +95,7 @@ export function LoginForm({
           <div className="text-red-500 text-sm text-center">{error}</div>
         )}
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? <Loader2 className="animate-spin" /> : "Login"}
         </Button>
         {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">

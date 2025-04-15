@@ -1,14 +1,13 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import ProtectedRoutes from "./protected-route";
-
 import { Progress } from "@/components/ui/progress";
 
 // Lazy loaded components
-const LoginPage = lazy(() => import("@/app/pages/authentication/page"));
-const DashboardPage = lazy(() => import("@/app/pages/dashboard/dashboard"));
-const NotFound = lazy(() => import("@/app/pages/error/error"));
 const HeroSection = lazy(() => import("@/app/pages/hero"));
+const LoginPage = lazy(() => import("@/app/pages/authentication/page"));
+const Main = lazy(() => import("@/app/pages/main/page"));
+const NotFound = lazy(() => import("@/app/pages/error/error"));
 
 const AppRouter = () => {
   const [progress, setProgress] = useState(0);
@@ -22,7 +21,7 @@ const AppRouter = () => {
         clearInterval(interval); // Stop the interval once it reaches 100
         return 90;
       });
-    }, 100);
+    }, 10);
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
@@ -37,9 +36,9 @@ const AppRouter = () => {
     >
       <Routes>
         <Route index element={<HeroSection />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoutes />}>
-          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="/main" element={<Main />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

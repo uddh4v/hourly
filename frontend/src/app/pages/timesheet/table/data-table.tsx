@@ -83,7 +83,7 @@ export function DataTableDemo() {
   };
 
   const SideCannonConfetti = () => {
-    const end = Date.now() + 3 * 1000; // 3 seconds
+    const end = Date.now() + 0.3 * 1000; // 3 seconds
     const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
 
     const frame = () => {
@@ -111,16 +111,6 @@ export function DataTableDemo() {
 
     frame();
   };
-
-  // const callRandomConfetti = () => {
-  //   const functions = [
-
-  //     SideCannonConfetti,
-
-  //   ];
-  //   const randomIndex = Math.floor(Math.random() * functions.length);
-  //   functions[randomIndex](); // call it!
-  // };
 
   return (
     <div className="w-full">

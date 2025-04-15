@@ -51,15 +51,14 @@ export default function HeroSection() {
 
           {/* Title */}
           <Lens defaultPosition={{ x: 260, y: 150 }}>
-          <div className="mt-5 max-w-2xl text-center mx-auto">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              <SparklesText>
-                Let&apos;s Track <AuroraText>Together</AuroraText>
-              </SparklesText>
-            </h1>
-          </div>
+            <div className="mt-5 max-w-2xl text-center mx-auto">
+              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                <SparklesText>
+                  Let&apos;s Track <AuroraText>Together</AuroraText>
+                </SparklesText>
+              </h1>
+            </div>
           </Lens>
-          
 
           {/* Description */}
           <div className="mt-5 max-w-3xl text-center mx-auto">
@@ -71,9 +70,8 @@ export default function HeroSection() {
 
           {/* Buttons */}
           <div className="mt-8 gap-3 flex justify-center">
-            
             <Button size={"lg"} onClick={getStarted}>
-            <DashboardPointer />
+              <DashboardPointer />
               Get started
             </Button>
             <Button size={"lg"} variant={"outline"}>
