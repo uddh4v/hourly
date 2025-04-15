@@ -21,9 +21,9 @@ export default function LoginPage() {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             {isLogin ? (
-              <LoginForm onSwitchToSignup={() => setIsLogin(false)} />
+              <SignupForm onSwitchToLogin={() => setIsLogin(false)} />
             ) : (
-              <SignupForm onSwitchToLogin={() => setIsLogin(true)} />
+              <LoginForm onSwitchToSignup={() => setIsLogin(true)} />
             )}
           </div>
         </div>

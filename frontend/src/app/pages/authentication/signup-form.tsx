@@ -69,11 +69,11 @@ export function SignupForm({
       <div className="grid gap-6">
         <div className="flex gap-4">
           <div className="w-1/2 grid gap-3">
-            <Label htmlFor="firstname">Firstname</Label>
+            <Label htmlFor="firstname">First Name</Label>
             <Input id="firstname" type="text" placeholder="John" required />
           </div>
           <div className="w-1/2 grid gap-3">
-            <Label htmlFor="lastname">Lastname</Label>
+            <Label htmlFor="lastname">Last Name</Label>
             <Input id="lastname" type="text" placeholder="Doe" required />
           </div>
         </div>
