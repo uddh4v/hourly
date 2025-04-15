@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import ProtectedRoutes from "./protected-route";
 import { Progress } from "@/components/ui/progress";
+import PublicRoute from "./public-route";
 
 // Lazy loaded components
 const HeroSection = lazy(() => import("@/app/pages/hero"));
@@ -36,7 +37,11 @@ const AppRouter = () => {
     >
       <Routes>
         <Route index element={<HeroSection />} />
-        <Route path="/login" element={<LoginPage />} />
+
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+
         <Route element={<ProtectedRoutes />}>
           <Route path="/main" element={<Main />} />
         </Route>

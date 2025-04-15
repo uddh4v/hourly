@@ -29,11 +29,17 @@ import { LogoutUser } from "@/service/auth/login";
 import { useNavigate } from "react-router";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { clearUser } from "@/store/reducers/userSlice";
+import { useDispatch } from "react-redux";
 
 export function NavUser() {
   const user = useSelector((state: RootState) => state.user.user);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
   const imgPath = `http://localhost:4000${user?.avatar}`;
-  console.log(imgPath)
+  const dispatch = useDispatch();
+  console.log(imgPath);
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
 
@@ -42,6 +48,8 @@ export function NavUser() {
       const response = await LogoutUser();
       if (response) {
         localStorage.removeItem("userId");
+        dispatch(clearUser());
+        console.log(user, isAuthenticated);
         navigate("/");
       }
     } catch (error) {

@@ -3,8 +3,14 @@ import { SectionCards } from "@/components/dashboard/section-cards";
 import { PieChartPage } from "./charts/PieChart";
 import { BarChartPage } from "./charts/BarChart";
 import { BarChartHorizontal } from "./charts/BarChartHorizontal";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
+  console.log("isAuthenticated" + isAuthenticated);
   return (
     <div>
       <SectionCards />

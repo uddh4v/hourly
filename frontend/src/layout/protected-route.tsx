@@ -9,6 +9,8 @@ const ProtectedRoutes = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null);
   const dispatch = useDispatch();
 
+  
+
   useEffect(() => {
     const checkAuth = async () => {
       const userId = localStorage.getItem("userId");

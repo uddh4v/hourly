@@ -6,6 +6,7 @@ import { Particles } from "@/components/magicui/particles";
 import { useNavigate } from "react-router";
 import DashboardPointer from "@/components/pointer/pointer-dashboard";
 import { Lens } from "@/components/magicui/lens";
+// import { Meteors } from "@/components/magicui/meteors";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function HeroSection() {
         {/* Background Particles */}
         <div className="absolute inset-0 -z-10">
           <Particles />
+          {/* <Meteors /> */}
         </div>
 
         {/* Main Content */}
