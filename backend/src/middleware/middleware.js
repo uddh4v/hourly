@@ -21,8 +21,9 @@ const configureMiddleware = (app) => {
   );
   dotenv.config();
   app.use(logger); // Custom logger middleware
-  app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
   app.use(
     helmet({
       crossOriginResourcePolicy: false,

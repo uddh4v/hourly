@@ -20,6 +20,14 @@ const projectSchema = new mongoose.Schema(
       enum: ["active", "completed", "on hold"],
       default: "active",
     },
+    projectManager: {
+      type: String,
+      required: true,
+    },
+    deliveryManager: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

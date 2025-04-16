@@ -19,11 +19,27 @@ export interface UserResponse {
   message: string;
   user: User;
 }
+
+export interface CreateUserRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "user" | "manager";
+  password: string;
+}
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const response = await axiosInstance.post<LoginResponse>(
     `${API_URL}/api/auth/login`,
     data,
     { withCredentials: true }
+  );
+  return response.data;
+};
+
+export const createUser = async (userData: CreateUserRequest) => {
+  const response = await axiosInstance.post(
+    `${API_URL}/api/user/create`,
+    userData
   );
   return response.data;
 };

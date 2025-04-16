@@ -14,11 +14,10 @@ const userSchema = new mongoose.Schema(
     isApproved: { type: Boolean, default: false }, // Field to track approval status
     location: { type: String, required: false },
     isRemote: { type: Boolean, default: false },
-    projects: [{ type: String }], // Or use ObjectId if referencing another collection
-    
+    projects: [{ type: String, ref: "Project" }], // Or use ObjectId if referencing another collection
+
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
-
   },
   { timestamps: true }
 );

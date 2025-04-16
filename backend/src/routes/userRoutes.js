@@ -8,6 +8,7 @@ import { nanoid } from "nanoid";
 import { requireRole } from "../middleware/requiredRole.js";
 import Project from "../model/projectModel.js";
 import mongoose from "mongoose";
+// import { sendEmail } from "../utils/mailer.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -20,8 +21,6 @@ const validateUser = [
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"), // Ensure password length is at least 6 characters
 ];
-
-
 
 router.get(
   "/alluser",
@@ -62,36 +61,6 @@ router.post(
       } = req.body;
 
       // Normalize and sanitize projects
-      let projectIds = [];
-
-      if (typeof projects === "string") {
-        projectIds = [projects];
-      } else if (Array.isArray(projects)) {
-        projectIds = projects;
-      }
-
-      // Filter out invalid IDs (must be valid 24-character hex strings)
-      const validObjectIds = projectIds.filter(
-        (id) => typeof id === "string" && /^[a-f\d]{24}$/i.test(id)
-      );
-
-      // Validate against DB if any projects are provided
-      let validProjects = [];
-      if (validObjectIds.length > 0) {
-        validProjects = await Project.find({
-          _id: {
-            $in: validObjectIds.map((id) => new mongoose.Types.ObjectId(id)),
-          },
-        });
-
-        if (validProjects.length !== validObjectIds.length) {
-          return res.status(400).json({
-            status: "failed",
-            message: "One or more project IDs are invalid.",
-          });
-        }
-      }
-
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({
@@ -112,11 +81,24 @@ router.post(
         avatar = firstNameInitial + lastNameInitial;
       }
 
-      const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(password, salt);
+      const salt = await bcrypt.genSaltSync(10);
+      const hashedPassword = await bcrypt.hashSync(password, salt);
 
       let isApproved = role === "admin" ? true : false; // Admin gets auto-approved, others need approval
       const empId = `${nanoid(5)}`;
+
+      const projectNames = Array.isArray(projects)
+        ? projects
+        : typeof projects === "string"
+        ? [projects]
+        : [];
+
+      const validProjects = await Project.find({
+        // _id: { $in: projectNames },
+        projectName: { $in: projectNames },
+      }).select("projectName");
+
+      const projectIds = validProjects.map((project) => project._id);
 
       const newUser = await User.create({
         empId,
@@ -130,10 +112,29 @@ router.post(
         designation,
         location,
         isRemote: isRemote === "true", // Make sure this is boolean
-        projects: validProjects.map((proj) => proj._id),
+        projects: projectIds,
         isApproved,
       });
       console.log(newUser);
+
+      // send email
+
+      // const message =
+      //   role === "admin"
+      //     ? `Account for ${email} has been created successfully.`
+      //     : `Account for ${email} has been created and is pending approval.`;
+
+      // const emailSubject =
+      //   role === "admin"
+      //     ? "Your Admin Account Has Been Created"
+      //     : "Your Account is Pending Approval";
+
+      // const emailHtml =
+      //   role === "admin"
+      //     ? `<h2>Hello ${firstName},</h2><p>Your admin account has been created successfully. You can now log in and manage the system.</p>`
+      //     : `<h2>Hello ${firstName},</h2><p>Your account has been created and is currently pending approval. You will be notified once it's activated.</p>`;
+
+      // await sendEmail(email, emailSubject, message, emailHtml);
 
       res.status(201).json({
         status: `success`,
@@ -144,6 +145,9 @@ router.post(
         userId: newUser._id,
       });
     } catch (error) {
+      console.error("🔴 Error message:", error.message);
+      console.error("📦 Full error object:", error);
+      console.error("📄 Stack trace:", error.stack);
       res.status(500).json({
         status: `failed`,
         message: "Server error",

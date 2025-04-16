@@ -12,6 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+import { createUser, CreateUserRequest } from "@/service/auth/login";
+import { toast } from "sonner";
 //
 
 type SignupFormProps = React.ComponentProps<"form"> & {
@@ -22,42 +25,56 @@ export function SignupForm({
   onSwitchToLogin,
   ...props
 }: SignupFormProps) {
-  //   const [email, setEmail] = useState("");
-  //   const [password, setPassword] = useState("");
-  //   const [loading, setLoading] = useState(false);
-  //   const [error, setError] = useState<string | null>(null);
-  //   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    role: "",
+  });
 
-  //   const handleLogin = async (e: any) => {
-  //     e.preventDefault();
-  //     setLoading(true);
-  //     setError(null);
-  //     try {
-  //       const response = await loginUser({ email, password });
-  //       console.log(response);
-  //       if (response) {
-  //         localStorage.setItem("userId", response.userId);
-  //         navigate("/dashboard");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
-  //         toast.success(response.status, {
-  //           description: response.message,
-  //         });
-  //       }
-  //     } catch (err: any) {
-  //       toast.error(err?.response?.data?.status || "Login failed", {
-  //         description: err?.response?.data?.message || "Login failed",
-  //       });
-  //       setError(err?.response?.data?.message || "Login failed");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const handleRoleChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, role: value }));
+  };
 
+  const handleCreateUSer = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const userData: CreateUserRequest = {
+        firstName: formData.firstname,
+        lastName: formData.lastname,
+        email: formData.email,
+        role: formData.role as "user" | "manager",
+        password: formData.password,
+      };
+      const response = await createUser(userData);
+      if (response) {
+        toast.success(response.status, {
+          description: response.message,
+        });
+      }
+      console.log("User created:", response);
+    } catch (error: any) {
+      const status = error.response?.status;
+      const message =
+        error.response?.data?.message || "An unexpected error occurred.";
+
+      // Show the error in the toast
+      toast.error(`Error ${status}`, {
+        description: message,
+      });
+    }
+  };
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
       {...props}
-      //   onSubmit={handleLogin}
+      onSubmit={handleCreateUSer}
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Create a Account</h1>
@@ -70,22 +87,43 @@ export function SignupForm({
         <div className="flex gap-4">
           <div className="w-1/2 grid gap-3">
             <Label htmlFor="firstname">First Name</Label>
-            <Input id="firstname" type="text" placeholder="John" required />
+            <Input
+              id="firstname"
+              type="text"
+              placeholder="John"
+              required
+              value={formData.firstname}
+              onChange={handleChange}
+            />
           </div>
           <div className="w-1/2 grid gap-3">
             <Label htmlFor="lastname">Last Name</Label>
-            <Input id="lastname" type="text" placeholder="Doe" required />
+            <Input
+              id="lastname"
+              type="text"
+              placeholder="Doe"
+              required
+              value={formData.lastname}
+              onChange={handleChange}
+            />
           </div>
         </div>
 
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="grid gap-3">
           <Label htmlFor="role">Role</Label>
-          <Select>
+          <Select onValueChange={handleRoleChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
@@ -101,7 +139,13 @@ export function SignupForm({
 
         <div className="grid gap-3">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" required />
+          <Input
+            id="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <Button type="submit" className="w-full">
