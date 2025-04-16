@@ -21,13 +21,13 @@ const projectSchema = new mongoose.Schema(
       default: "active",
     },
     projectManager: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    deliveryManager: {
-      type: String,
-      required: true,
-    },
+    // deliveryManager: {
+    //   type: String,
+    //   required: true,
+    // },
   },
   { timestamps: true }
 );
