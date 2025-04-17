@@ -2,11 +2,11 @@ import { AuroraText } from "@/components/magicui/aurora-text";
 import { SparklesText } from "@/components/magicui/sparkles-text";
 import { Button } from "@/components/ui/button";
 // import { ChevronRightIcon } from "lucide-react";
-import { Particles } from "@/components/magicui/particles";
+// import { Particles } from "@/components/magicui/particles";
 import { useNavigate } from "react-router";
 import DashboardPointer from "@/components/pointer/pointer-dashboard";
 import { Lens } from "@/components/magicui/lens";
-// import { Meteors } from "@/components/magicui/meteors";
+import { RetroGrid } from "@/components/magicui/retro-grid";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -19,7 +19,10 @@ export default function HeroSection() {
       <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
         {/* Background Particles */}
         <div className="absolute inset-0 -z-10">
-          <Particles />
+          {/* <Particles />
+           */}
+
+          <RetroGrid />
           {/* <Meteors /> */}
         </div>
 

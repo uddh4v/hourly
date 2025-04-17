@@ -4,6 +4,23 @@ import User from "../model/userModal.js";
 
 const router = express.Router();
 
+router.get("/getAllProjects", async (req, res) => {
+  try {
+    const projects = await Project.find();
+    res.status(200).json({
+      status: "success",
+      message: "Projects fetched Successfully",
+      projects,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "failed",
+      message: "Server error",
+      error: error.message,
+    });
+  }
+});
+
 router.post("/createProject", async (req, res) => {
   try {
     const { projectName, clientName, description, status, projectManager } =
@@ -15,15 +32,15 @@ router.post("/createProject", async (req, res) => {
         message: `${projectName} project already exists`,
       });
     }
+    // Validate projectManager exists and is a manager
     const manager = await User.findOne({
-      _id: projectManager, // assuming you're sending manager's ID
+      _id: projectManager,
       role: "manager",
     });
-
     if (!manager) {
       return res.status(400).json({
         status: "failed",
-        message: "Project manager must be a valid user with role 'manager'",
+        message: "Invalid project manager. Must be a user with manager role.",
       });
     }
     const newProject = await Project.create({

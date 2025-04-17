@@ -2,11 +2,8 @@ import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema(
   {
-    projectName: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+    projectName: { type: String, required: true, unique: true },
+
     clientName: {
       type: String,
       required: true,
@@ -20,14 +17,7 @@ const projectSchema = new mongoose.Schema(
       enum: ["active", "completed", "on hold"],
       default: "active",
     },
-    projectManager: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
-    // deliveryManager: {
-    //   type: String,
-    //   required: true,
-    // },
+    projectManager: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

@@ -15,6 +15,9 @@ import {
 import { useState } from "react";
 import { createUser, CreateUserRequest } from "@/service/auth/login";
 import { toast } from "sonner";
+import { MultiSelectDropdown } from "@/components/customComponent/multiselect-dropdown";
+// import { GetAllProjectsList, Project } from "@/service/project";
+
 //
 
 type SignupFormProps = React.ComponentProps<"form"> & {
@@ -25,13 +28,32 @@ export function SignupForm({
   onSwitchToLogin,
   ...props
 }: SignupFormProps) {
+  // const [projects, setProjects] = useState<Project[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     email: "",
     password: "",
     role: "",
+    project: "",
   });
+
+  console.log(formData);
+
+  // useEffect(() => {
+  //   getAllProjectList();
+  // }, []);
+
+  // const getAllProjectList = async () => {
+  //   try {
+  //     const response = await GetAllProjectsList();
+  //     setProjects(response.projects);
+  //     console.log("getAllProjectList", response.projects);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -42,7 +64,7 @@ export function SignupForm({
     setFormData((prev) => ({ ...prev, role: value }));
   };
 
-  const handleCreateUSer = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const userData: CreateUserRequest = {
@@ -50,6 +72,7 @@ export function SignupForm({
         lastName: formData.lastname,
         email: formData.email,
         role: formData.role as "user" | "manager",
+        projects: formData.project,
         password: formData.password,
       };
       const response = await createUser(userData);
@@ -74,7 +97,7 @@ export function SignupForm({
     <form
       className={cn("flex flex-col gap-6", className)}
       {...props}
-      onSubmit={handleCreateUSer}
+      onSubmit={handleCreateUser}
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Create a Account</h1>
@@ -136,6 +159,88 @@ export function SignupForm({
             </SelectContent>
           </Select>
         </div>
+        <div className="grid gap-3">
+          <Label htmlFor="role">Project</Label>
+          <MultiSelectDropdown
+            options={[
+              "cKUsFl",
+              "swvvCt",
+              "oisDAH",
+              "tyZGeH",
+              "AVkqPN",
+              "XWpvut",
+              "VpfNFZ",
+              "dJluoh",
+              "kwbFFC",
+              "HTMxBa",
+              "ADfMOy",
+              "OHZfun",
+              "DivUzJ",
+              "WyeaCt",
+              "RPmxgV",
+              "gdLkfT",
+              "TCCYTP",
+              "GOECek",
+              "jNEwLP",
+              "MpBVOq",
+              "nmhrZx",
+              "wEGOKc",
+              "ULNtmy",
+              "JOXUHx",
+              "YoPhiR",
+              "RzrHur",
+              "TIhDve",
+              "sldqdu",
+              "BEwjaE",
+              "HbMsQF",
+              "HigoiR",
+              "TVQqVu",
+              "muUooS",
+              "nkSqpc",
+              "MnGgFs",
+              "BalbIO",
+              "YKPDFy",
+              "SXvHpa",
+              "fRnCft",
+              "sdEVyi",
+              "ZUtMbp",
+              "EDdSvj",
+              "YiOaED",
+              "YOsDlm",
+              "AqNKFB",
+              "KSoPFX",
+              "vcJqjs",
+              "xebHBt",
+              "eGHxQR",
+              "DemDpf",
+            ]}
+            selected={selected}
+            onChange={setSelected}
+          />
+        </div>
+
+        {/* <div className="grid gap-3">
+          <Label htmlFor="project">Project</Label>
+          <Select
+            onValueChange={(value) =>
+              setFormData((prev) => ({ ...prev, project: value }))
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select project" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Projects</SelectLabel>
+                {projects.map((project) => (
+                  <SelectItem key={project._id} value={project._id}>
+                    {project.projectName}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div> */}
 
         <div className="grid gap-3">
           <Label htmlFor="password">Password</Label>

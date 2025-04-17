@@ -90,12 +90,12 @@ router.post(
       const projectNames = Array.isArray(projects)
         ? projects
         : typeof projects === "string"
-        ? [projects]
-        : [];
+          ? [projects]
+          : [];
 
       const validProjects = await Project.find({
-        // _id: { $in: projectNames },
-        projectName: { $in: projectNames },
+        _id: { $in: projectNames },
+        // projectName: { $in: projectNames },
       }).select("projectName");
 
       const projectIds = validProjects.map((project) => project._id);
@@ -115,7 +115,7 @@ router.post(
         projects: projectIds,
         isApproved,
       });
-      console.log(newUser);
+      console.log(newUser.projects);
 
       // send email
 
