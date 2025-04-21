@@ -13,17 +13,12 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import { Logs, Settings } from "lucide-react";
 import Timesheet from "../timesheet/page";
 import Dashboard from "../dashboard/dashboard";
 import { useState } from "react";
 
 export default function Main() {
-  const user = useSelector((state: RootState) => state.user.user);
-  console.log("dashboard user redux", user);
-
   const [activePage, setActivePage] = useState("dashboard");
 
   const handleNavClick = (page: string) => {

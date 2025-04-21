@@ -36,9 +36,8 @@ const AppRouter = () => {
       }
     >
       <Routes>
-        <Route index element={<HeroSection />} />
-
         <Route element={<PublicRoute />}>
+          <Route index element={<HeroSection />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
 

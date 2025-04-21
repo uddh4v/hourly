@@ -1,22 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { IProjectResponse } from "@/interface/Project";
 import axiosInstance from "../AxiosInstance";
 
-export interface Project {
-  _id: string;
-  projectName: string;
-  clientName: string;
-  description: string;
-  status: "active" | "inactive"; // You can extend this if there are more statuses
-  projectManager: string; // Assuming this is a user ID
-}
-
-export interface ProjectsResponse {
-  status: string;
-  message: string;
-  projects: Project[];
-}
-export const GetAllProjectsList = async (): Promise<ProjectsResponse> => {
-  const response = await axiosInstance.get<ProjectsResponse>(
+export const GetAllProjectsList = async (): Promise<IProjectResponse> => {
+  const response = await axiosInstance.get<IProjectResponse>(
     "/api/project/getAllProjects"
+  );
+  return response.data;
+};
+
+export const GetAssignedProjectToUser = async (
+  userId: string
+): Promise<IProjectResponse> => {
+  const response = await axiosInstance.get(
+    `/api/project/assignedProject/${userId}`
   );
   return response.data;
 };

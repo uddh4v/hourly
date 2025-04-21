@@ -19,6 +19,10 @@ import { TeamSwitcher } from "./team-switcher";
 import { NavMain } from "./nav-main";
 
 import { NavUser } from "./nav-user";
+import { useEffect } from "react";
+import { GetAssignedProjectToUser } from "@/service/project";
+import { useSelector } from "react-redux";
+import { selectUserId } from "@/store/selectors";
 
 const data = {
   // user: {
@@ -70,6 +74,22 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ handleNavClick, ...props }: AppSidebarProps) {
+  const userId = useSelector(selectUserId) ?? "";
+  useEffect(() => {
+    const getProjects = async () => {
+      // const userId = localStorage.getItem("userId") || "";
+      try {
+        const response = await GetAssignedProjectToUser(userId);
+        if (response.status === "success") {
+          console.log("projects:", response.projects);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProjects();
+  }, [userId]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

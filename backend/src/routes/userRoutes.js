@@ -87,18 +87,21 @@ router.post(
       let isApproved = role === "admin" ? true : false; // Admin gets auto-approved, others need approval
       const empId = `${nanoid(5)}`;
 
-      const projectNames = Array.isArray(projects)
-        ? projects
-        : typeof projects === "string"
-          ? [projects]
-          : [];
+      // Normalize project names to array
+      const inputProjectIds = (
+        Array.isArray(projects)
+          ? projects
+          : typeof projects === "string"
+            ? [projects]
+            : []
+      ).filter((id) => mongoose.Types.ObjectId.isValid(id));
 
+      // Now fetch only the projects that exist
       const validProjects = await Project.find({
-        _id: { $in: projectNames },
-        // projectName: { $in: projectNames },
-      }).select("projectName");
+        _id: { $in: inputProjectIds },
+      }).select("_id");
 
-      const projectIds = validProjects.map((project) => project._id);
+      const projectIds = validProjects.map((p) => p._id);
 
       const newUser = await User.create({
         empId,

@@ -1,4 +1,3 @@
-import React from "react";
 import { Pointer } from "../magicui/pointer";
 import { motion } from "motion/react";
 

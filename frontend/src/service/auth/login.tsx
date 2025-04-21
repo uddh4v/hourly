@@ -27,7 +27,7 @@ export interface CreateUserRequest {
   role: "user" | "manager";
   password: string;
 
-  projects: string;
+  projects: string[];
 }
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const response = await axiosInstance.post<LoginResponse>(

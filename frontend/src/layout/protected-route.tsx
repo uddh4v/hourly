@@ -1,19 +1,18 @@
 import { Progress } from "@/components/ui/progress";
 import { getUserById } from "@/service/auth/login";
 import { clearUser, setUser } from "@/store/reducers/userSlice";
+import { selectUserId } from "@/store/selectors";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router"; // <- use `react-router-dom` here
 
 const ProtectedRoutes = () => {
+  const userId = useSelector(selectUserId);
   const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null);
   const dispatch = useDispatch();
 
-  
-
   useEffect(() => {
     const checkAuth = async () => {
-      const userId = localStorage.getItem("userId");
       if (!userId) {
         dispatch(clearUser());
         setIsAuthenticated(false);
@@ -37,7 +36,7 @@ const ProtectedRoutes = () => {
     };
 
     checkAuth();
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   if (isAuthenticated === null) {
     // Show loading progress while auth is being checked

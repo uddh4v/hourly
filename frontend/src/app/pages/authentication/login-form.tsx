@@ -8,6 +8,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { setUserId } from "@/store/reducers/userIdSlice";
+import { useDispatch } from "react-redux";
 
 type LoginFormProps = React.ComponentProps<"form"> & {
   onSwitchToSignup: () => void;
@@ -23,6 +25,7 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -32,6 +35,7 @@ export function LoginForm({
       const response = await loginUser({ email, password });
       console.log(response);
       if (response) {
+        dispatch(setUserId(response.userId));
         localStorage.setItem("userId", response.userId);
         navigate("/main");
 
