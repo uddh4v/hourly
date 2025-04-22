@@ -19,7 +19,7 @@ const userIdSlice = createSlice({
         userId: action.payload,
       };
     },
-    clearUser: () => {
+    clearUserId: () => {
       return {
         userId: null,
       };
@@ -27,5 +27,5 @@ const userIdSlice = createSlice({
   },
 });
 
-export const { setUserId, clearUser } = userIdSlice.actions;
+export const { setUserId, clearUserId } = userIdSlice.actions;
 export default userIdSlice.reducer;

@@ -4,8 +4,7 @@ import Timesheet from "../model/timesheetModel.js";
 const router = express.Router();
 
 router.post("/timesheetSubmit", async (req, res) => {
-  const { userId, projectId, date, hoursWorked, description, status } =
-    req.body;
+  const { userId, projectId, date, hoursWorked, description, status } = req.body;
 
   if (!userId || !projectId || !date || !hoursWorked) {
     return res.status(400).json({ error: "Missing required fields." });
@@ -24,15 +23,23 @@ router.post("/timesheetSubmit", async (req, res) => {
       date,
       hoursWorked,
       description,
-      status: status || "draft", // default to draft if not provided
+      status: status || "draft",
       submittedAt: status === "submitted" ? new Date() : null,
     });
 
     const saved = await timesheet.save();
-    res.status(201).json(saved);
+
+    // 👇 Custom message based on the action
+    const message =
+      saved.status === "submitted"
+        ? "Timesheet submitted successfully."
+        : "Timesheet saved as draft.";
+
+    res.status(201).json({ message, timesheet: saved });
   } catch (err) {
     console.error("Error saving timesheet:", err);
     res.status(500).json({ error: err.message, stack: err.stack });
   }
 });
+
 export default router;

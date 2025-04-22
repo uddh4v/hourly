@@ -22,7 +22,8 @@ import { NavUser } from "./nav-user";
 import { useEffect } from "react";
 import { GetAssignedProjectToUser } from "@/service/project";
 import { useSelector } from "react-redux";
-import { selectUserId } from "@/store/selectors";
+import { getUserId } from "@/store/selectors";
+
 
 const data = {
   // user: {
@@ -74,7 +75,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ handleNavClick, ...props }: AppSidebarProps) {
-  const userId = useSelector(selectUserId) ?? "";
+  const userId = useSelector(getUserId) ?? "";
   useEffect(() => {
     const getProjects = async () => {
       // const userId = localStorage.getItem("userId") || "";

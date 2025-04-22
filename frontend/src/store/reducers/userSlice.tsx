@@ -3,7 +3,6 @@ import { User } from "@/interface/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define types for the user data
-
 export interface UserState {
   isAuthenticated: boolean;
   user: User | null;
@@ -19,12 +18,18 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      state.isAuthenticated = true;
-      state.user = action.payload;
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload,
+      };
     },
     clearUser: (state) => {
-      state.isAuthenticated = false;
-      state.user = null;
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
     },
   },
 });

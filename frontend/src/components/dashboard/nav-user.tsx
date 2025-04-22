@@ -27,16 +27,15 @@ import {
 } from "@/components/ui/sidebar";
 import { LogoutUser } from "@/service/auth/login";
 import { useNavigate } from "react-router";
-import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { clearUser } from "@/store/reducers/userSlice";
 import { useDispatch } from "react-redux";
+import { clearUserId } from "@/store/reducers/userIdSlice";
+import { getSelectedUserData, isUserAuthenticated } from "@/store/selectors";
 
 export function NavUser() {
-  const user = useSelector((state: RootState) => state.user.user);
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.user.isAuthenticated
-  );
+  const user = useSelector(getSelectedUserData);
+  const isAuthenticated = useSelector(isUserAuthenticated);
   const imgPath = `http://localhost:4000${user?.avatar}`;
   const dispatch = useDispatch();
   console.log(imgPath);
@@ -48,6 +47,7 @@ export function NavUser() {
       const response = await LogoutUser();
       if (response) {
         localStorage.removeItem("userId");
+        dispatch(clearUserId());
         dispatch(clearUser());
         console.log(user, isAuthenticated);
         navigate("/");
