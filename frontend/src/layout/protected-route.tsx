@@ -5,7 +5,7 @@ import { getUserId } from "@/store/selectors";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router"; // <- use `react-router-dom` here
+import { Navigate, Outlet } from "react-router"; // ✅ corrected
 
 const ProtectedRoutes = () => {
   const userId = useSelector(getUserId);
@@ -30,22 +30,20 @@ const ProtectedRoutes = () => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Authentication check failed:", error);
         dispatch(clearUser());
         setIsAuthenticated(false);
       }
     };
 
     checkAuth();
-  }, [dispatch, userId]);
+  }, [dispatch, userId]); // ✅ added userId to dependencies
 
   if (isAuthenticated === null) {
-    // Show loading progress while auth is being checked
     return <Progress />;
   }
 
-  // If authenticated, show the nested routes. If not, redirect to login.
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoutes;

@@ -51,7 +51,7 @@ const MultiSelect = ({
       <DropdownMenuTrigger asChild className="w-full">
         <Button
           variant="outline"
-          className="w-full flex items-center justify-between"
+          className="w-full flex items-center justify-between text-[#8E8E8E]"
         >
           <div className="truncate text-left">
             {selectedOptions.length > 0

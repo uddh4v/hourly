@@ -38,7 +38,7 @@ export function NavUser() {
   const isAuthenticated = useSelector(isUserAuthenticated);
   const imgPath = `http://localhost:4000${user?.avatar}`;
   const dispatch = useDispatch();
-  console.log(imgPath);
+  // console.log(imgPath);
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
 
@@ -49,7 +49,9 @@ export function NavUser() {
         localStorage.removeItem("userId");
         dispatch(clearUserId());
         dispatch(clearUser());
-        console.log(user, isAuthenticated);
+        console.log(
+          `userdata:${user} and is user authenticated ${isAuthenticated}`
+        );
         navigate("/");
       }
     } catch (error) {

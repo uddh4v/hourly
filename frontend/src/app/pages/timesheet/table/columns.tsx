@@ -3,9 +3,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DatePickerDemo } from "@/components/ui/date-picker";
+// import { DatePickerDemo } from "@/components/ui/date-picker";
 
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -17,13 +22,20 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  IconBug,
   IconCircleCheckFilled,
+  IconCode,
   IconExclamationCircleFilled,
+  IconFlask,
   IconLoader,
+  IconMessagePlus,
+  IconTools,
+  IconUsers,
 } from "@tabler/icons-react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
 
 export type Timesheet = {
   id: string;
@@ -61,26 +73,26 @@ export const columns = (
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => {
-      const rawDate = row.getValue("date");
+  // {
+  //   accessorKey: "date",
+  //   header: "Date",
+  //   cell: ({ row }) => {
+  //     const rawDate = row.getValue("date");
 
-      // Safely parse the date
-      const date = rawDate ? new Date(rawDate as string) : undefined;
+  //     // Safely parse the date
+  //     const date = rawDate ? new Date(rawDate as string) : undefined;
 
-      return (
-        <DatePickerDemo
-          value={date}
-          onChange={(newDate) => {
-            console.log("New date for row:", row.id, newDate);
-            // You can add saving logic here if needed
-          }}
-        />
-      );
-    },
-  },
+  //     return (
+  //       <DatePickerDemo
+  //         value={date}
+  //         onChange={(newDate) => {
+  //           console.log("New date for row:", row.id, newDate);
+  //           // You can add saving logic here if needed
+  //         }}
+  //       />
+  //     );
+  //   },
+  // },
   {
     accessorKey: "project",
     header: "Project",
@@ -103,6 +115,52 @@ export const columns = (
               <SelectLabel>Projects</SelectLabel>
               <SelectItem value="apple">GroupM</SelectItem>
               <SelectItem value="banana">Automation</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      );
+    },
+  },
+  {
+    accessorKey: "task",
+    header: "Task",
+    cell: ({ row }) => {
+      const currentValue = row.getValue("project") as string | undefined;
+
+      return (
+        <Select
+          value={currentValue}
+          onValueChange={(newValue) => {
+            console.log("Selected project for row", row.id, ":", newValue);
+            // Optionally persist the change
+          }}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a project" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Task</SelectLabel>
+              <SelectItem value="development">
+                <IconCode className="mr-2 h-4 w-4" />
+                Development
+              </SelectItem>
+              <SelectItem value="meeting">
+                <IconUsers className="mr-2 h-4 w-4" />
+                Meeting
+              </SelectItem>
+              <SelectItem value="testing">
+                <IconTools className="mr-2 h-4 w-4" />
+                Testing
+              </SelectItem>
+              <SelectItem value="research">
+                <IconFlask className="mr-2 h-4 w-4" />
+                Research
+              </SelectItem>
+              <SelectItem value="bug-fix">
+                <IconBug className="mr-2 h-4 w-4" />
+                Bug fix
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -170,8 +228,8 @@ export const columns = (
     header: "Time",
     cell: ({ row }: any) => (
       <Input
-        value={row.getValue("text")}
-        onChange={(e) => row.getValue("text", e.target.value)}
+        value={row.getValue("timespend")}
+        onChange={(e) => row.getValue("timespend", e.target.value)}
         className=" w-[50px]"
       />
     ),
@@ -179,14 +237,44 @@ export const columns = (
   {
     accessorKey: "description",
     header: "Description",
-    cell: ({ row }: any) => (
-      <Textarea
-        value={row.getValue("text")}
-        onChange={(e) => row.getValue("text", e.target.value)} // Handle email update logic here
-        className="lowercase w-[300px]"
-        rows={2} // Adjust the number of rows for the Textarea
-      />
-    ),
+    cell: ({ row }: any) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [open, setOpen] = useState(false);
+      const value = row.getValue("description");
+
+      const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        // Ideally you'd update the data here, maybe with row.original or a callback
+        console.log("Updated value:", e.target.value);
+      };
+
+      return (
+        <>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <IconMessagePlus
+                stroke={2}
+                className="ml-6 cursor-pointer"
+                onClick={() => setOpen(!open)}
+              />
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-[320px] p-2" // Set a width and padding
+              sideOffset={8} // Optional: adds spacing between trigger and popover
+            >
+              <div className="grid w-full gap-2">
+                <Textarea
+                  value={value}
+                  onChange={handleChange}
+                  className="lowercase w-full resize-none" // Make it full width and prevent resizing
+                  rows={3}
+                />
+                <Button>Send message</Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </>
+      );
+    },
   },
 
   {

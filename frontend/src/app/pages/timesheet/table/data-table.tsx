@@ -21,7 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -33,6 +33,8 @@ import {
 import { columns, Timesheet } from "./columns";
 import { nanoid } from "nanoid"; // for unique ID generation
 import confetti from "canvas-confetti";
+// import { Separator } from "@/components/ui/separator";
+import WeekDisplay from "./datemenu";
 
 export function DataTableDemo() {
   const [data, setData] = React.useState<Timesheet[]>([
@@ -115,14 +117,17 @@ export function DataTableDemo() {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between py-4">
-        <Input
+        {/* <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-        />
+        /> */}
+        <div className="flex h-5 items-center space-x-4 text-sm pl-2">
+          <WeekDisplay />
+        </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleAddRow}>
             <Plus className="mr-2 h-4 w-4" /> Add Row

@@ -5,8 +5,11 @@ interface AuthState {
   userId: string | null;
 }
 
+// Load from localStorage on startup
+const storedUserId = localStorage.getItem("userId");
+
 const initialState: AuthState = {
-  userId: null,
+  userId: storedUserId || null,
 };
 
 const userIdSlice = createSlice({
@@ -14,15 +17,12 @@ const userIdSlice = createSlice({
   initialState,
   reducers: {
     setUserId: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        userId: action.payload,
-      };
+      localStorage.setItem("userId", action.payload); // persist it
+      state.userId = action.payload;
     },
-    clearUserId: () => {
-      return {
-        userId: null,
-      };
+    clearUserId: (state) => {
+      localStorage.removeItem("userId"); // clear from storage
+      state.userId = null;
     },
   },
 });
