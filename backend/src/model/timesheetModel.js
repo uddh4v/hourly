@@ -7,29 +7,47 @@ const timesheetSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    projectId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
-      required: true,
-    },
+
     date: {
       type: Date,
       required: true,
     },
-    hoursWorked: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    description: {
-      type: String,
-      default: "",
-    },
-    status: {
-      type: String,
-      enum: ["draft", "submitted", "approved", "rejected"],
-      default: "draft",
-    },
+    entries: [
+      {
+        projectId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Project",
+          required: true,
+        },
+        task: {
+          type: String,
+        },
+        progress: {
+          type: String,
+        },
+        hoursWorked: { type: Number, required: true },
+        description: { type: String },
+      },
+    ],
+    // projectId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Project",
+    //   required: true,
+    // },
+    // hoursWorked: {
+    //   type: Number,
+    //   required: true,
+    //   min: 0,
+    // },
+    // description: {
+    //   type: String,
+    //   default: "",
+    // },
+    // status: {
+    //   type: String,
+    //   enum: ["draft", "submitted", "approved", "rejected"],
+    //   default: "draft",
+    // },
     submittedAt: Date,
     approvedBy: {
       type: mongoose.Schema.Types.ObjectId,

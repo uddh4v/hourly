@@ -73,26 +73,7 @@ export const columns = (
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: "date",
-  //   header: "Date",
-  //   cell: ({ row }) => {
-  //     const rawDate = row.getValue("date");
 
-  //     // Safely parse the date
-  //     const date = rawDate ? new Date(rawDate as string) : undefined;
-
-  //     return (
-  //       <DatePickerDemo
-  //         value={date}
-  //         onChange={(newDate) => {
-  //           console.log("New date for row:", row.id, newDate);
-  //           // You can add saving logic here if needed
-  //         }}
-  //       />
-  //     );
-  //   },
-  // },
   {
     accessorKey: "project",
     header: "Project",
@@ -229,7 +210,16 @@ export const columns = (
     cell: ({ row }: any) => (
       <Input
         value={row.getValue("timespend")}
-        onChange={(e) => row.getValue("timespend", e.target.value)}
+        onChange={(e) => {
+          const newValue = e.target.value;
+          setData((prevData) =>
+            prevData.map((item) =>
+              item.id === row.original.id
+                ? { ...item, timespend: newValue }
+                : item
+            )
+          );
+        }}
         className=" w-[50px]"
       />
     ),

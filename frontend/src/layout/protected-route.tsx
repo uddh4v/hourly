@@ -3,47 +3,36 @@ import { getUserById } from "@/service/auth/login";
 import { clearUser, setUser } from "@/store/reducers/userSlice";
 import { getUserId } from "@/store/selectors";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router"; // ✅ corrected
+import { Navigate, Outlet } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 
 const ProtectedRoutes = () => {
   const userId = useSelector(getUserId);
-  const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null);
   const dispatch = useDispatch();
 
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => {
+      if (!userId) throw new Error("No userId");
+      return getUserById(userId);
+    },
+    enabled: !!userId, // Only run if userId exists
+  });
+
   useEffect(() => {
-    const checkAuth = async () => {
-      if (!userId) {
-        dispatch(clearUser());
-        setIsAuthenticated(false);
-        return;
-      }
+    if (data?.status === "success") {
+      dispatch(setUser(data.user));
+    } else if (isError) {
+      dispatch(clearUser());
+    }
+  }, [data, isError, dispatch]);
 
-      try {
-        const response = await getUserById(userId);
-        if (response.status === "success") {
-          dispatch(setUser(response.user));
-          setIsAuthenticated(true);
-        } else {
-          dispatch(clearUser());
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error("Authentication check failed:", error);
-        dispatch(clearUser());
-        setIsAuthenticated(false);
-      }
-    };
+  if (isLoading) return <Progress />;
+  if (isError) return <Navigate to="/login" replace />;
 
-    checkAuth();
-  }, [dispatch, userId]); // ✅ added userId to dependencies
-
-  if (isAuthenticated === null) {
-    return <Progress />;
-  }
-
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  return <Outlet />;
 };
 
 export default ProtectedRoutes;

@@ -24,7 +24,6 @@ import { GetAssignedProjectToUser } from "@/service/project";
 import { useSelector } from "react-redux";
 import { getUserId } from "@/store/selectors";
 
-
 const data = {
   // user: {
   //   name: "shadcn",
