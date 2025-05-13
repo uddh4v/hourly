@@ -17,6 +17,7 @@ import { createUser, CreateUserRequest } from "@/service/auth/login";
 import { toast } from "sonner";
 import MultiSelect from "@/components/customComponent/multiselect-dropdown";
 import { GetAllProjectsList } from "@/service/project";
+import { Eye, EyeClosed } from "lucide-react";
 
 type SignupFormProps = React.ComponentProps<"form"> & {
   onSwitchToLogin: () => void;
@@ -26,6 +27,7 @@ export function SignupForm({
   onSwitchToLogin,
   ...props
 }: SignupFormProps) {
+  const [showPassword, setShowPassword] = useState(false);
   const [projects, setProjects] = useState<{ label: string; value: string }[]>(
     []
   );
@@ -103,6 +105,11 @@ export function SignupForm({
       });
     }
   };
+
+  const togglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
@@ -179,15 +186,25 @@ export function SignupForm({
           />
         </div>
 
-        <div className="grid gap-3">
+        <div className="relative grid gap-3">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={handleChange}
             required
+            className="pr-10"
           />
+          {formData.password && (
+            <span
+              onClick={togglePassword}
+              className="absolute right-3 top-1/2 mt-3
+               transform -translate-y-1/2 cursor-pointer text-gray-500"
+            >
+              {showPassword ? <EyeClosed /> : <Eye />}
+            </span>
+          )}
         </div>
 
         <Button type="submit" className="w-full">

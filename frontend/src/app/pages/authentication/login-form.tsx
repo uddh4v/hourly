@@ -7,7 +7,7 @@ import { loginUser } from "@/service/auth/login";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeClosed, Loader2 } from "lucide-react";
 import { setUserId } from "@/store/reducers/userIdSlice";
 import { useDispatch } from "react-redux";
 
@@ -23,6 +23,7 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,6 +52,10 @@ export function LoginForm({
     } finally {
       setLoading(false);
     }
+  };
+
+  const togglePassword = () => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -87,14 +92,28 @@ export function LoginForm({
               Forgot your password?
             </a>
           </div>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+          {/* Relative container to position the eye icon */}
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="pr-10" // Make space for the eye icon
+            />
+            {password && (
+              <span
+                onClick={togglePassword}
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+              >
+                {showPassword ? <EyeClosed /> : <Eye />}
+              </span>
+            )}
+          </div>
         </div>
+
         {error && (
           <div className="text-red-500 text-sm text-center">{error}</div>
         )}

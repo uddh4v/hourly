@@ -1,10 +1,12 @@
 import { Provider } from "react-redux";
 import { Toaster } from "./components/ui/sonner";
-import AppRouter from "./layout/router";
+
 import { ModeToggle } from "./theme/darkmode/mode-toggle";
 import { ThemeProvider } from "./theme/darkmode/theme-provider";
 
 import { store } from "./store/store";
+import { RouterProvider } from "react-router";
+import { AppRouter } from "./layout/router";
 // import { Pointer } from "./components/magicui/pointer";
 
 export default function App() {
@@ -18,7 +20,7 @@ export default function App() {
           <div className="fixed top-4 right-4 z-50">
             <ModeToggle />
           </div>
-          <AppRouter />
+          <RouterProvider router={AppRouter} />
         </ThemeProvider>
       </Provider>
     </div>
